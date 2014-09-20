@@ -1,0 +1,140 @@
+<html class="ui-mobile"><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252"><!-- base href="http://ramkulkarni.com/temp/2012-10-03/" --><link rel="stylesheet" href="canvasHugo_fichiers/jquery.css">
+<script type="text/javascript" src="canvasHugo_fichiers/jquery-1.js"></script>
+<script type="text/javascript" src="canvasHugo_fichiers/jquery.js"></script>
+<script type="text/javascript" src="canvasHugo_fichiers/RecordableDrawing.js"></script>
+
+<script type="text/javascript">
+	
+	playbackInterruptCommand = "";
+	
+	$(document).bind("pageinit", function()
+	{
+		$("#pauseBtn").hide();
+		$("#playBtn").hide();
+		drawing = new RecordableDrawing("canvas1");
+		
+		$("#recordBtn").click(function(){
+			var btnTxt = $("#recordBtn .ui-btn-text").text();
+			if (btnTxt == 'Stop')
+				stopRecording();
+			else
+				startRecording();
+		});
+		
+		$("#playBtn").click(function(){
+			var btnTxt = $("#playBtn .ui-btn-text").text();
+			if (btnTxt == 'Stop')
+				stopPlayback();
+			else
+				startPlayback();			
+		});
+		
+		$("#pauseBtn").click(function(){
+			var btnTxt = $("#pauseBtn .ui-btn-text").text();
+			if (btnTxt == 'Pause')
+			{
+				pausePlayback();
+			} else if (btnTxt == 'Resume')
+			{
+				resumePlayback();
+			}
+		});
+		
+		$("#clearBtn").click(function(){
+			drawing.clearCanvas();			
+		});
+	});
+	
+	function stopRecording()
+	{
+		$("#recordBtn .ui-btn-text").text("Record");
+		$("#playBtn").show();
+		$("#clearBtn").show();
+		$("#pauseBtn").hide();
+		
+		drawing.stopRecording();
+	}
+	
+	function startRecording()
+	{
+		$("#recordBtn .ui-btn-text").text("Stop");
+		$("#playBtn").hide();
+		$("#pauseBtn").hide();
+		$("#clearBtn").hide();
+		
+		drawing.startRecording();
+	}
+	
+	function stopPlayback()
+	{
+		playbackInterruptCommand = "stop";		
+	}
+	
+	function startPlayback()
+	{
+		drawing.playRecording(function() {
+			//on playback start
+			$("#playBtn .ui-btn-text").text("Stop");
+			$("#recordBtn").hide();
+			$("#pauseBtn").show();
+			$("#clearBtn").hide();
+
+			playbackInterruptCommand = "";
+		}, function(){
+			//on playback end
+			$("#playBtn .ui-btn-text").text("Play");
+			$("#playBtn").show();
+			$("#recordBtn").show();
+			$("#clearBtn").show();
+			$("#pauseBtn").hide();
+		}, function() {
+			//on pause
+			$("#pauseBtn .ui-btn-text").text("Resume");
+			$("#recordBtn").hide();
+			$("#playBtn").hide();
+			$("#clearBtn").hide();
+			
+		}, function() {
+			//status callback
+			return playbackInterruptCommand;
+		});
+	}
+	
+	function pausePlayback()
+	{
+		playbackInterruptCommand = "pause";
+	}
+	
+	function resumePlayback()
+	{
+		playbackInterruptCommand = "";
+		drawing.resumePlayback(function(){
+			$("#pauseBtn .ui-btn-text").text("Pause");
+			$("#pauseBtn").show();
+			$("#recordBtn").hide();
+			$("#clearBtn").hide();
+			$("#playBtn").show();
+		});
+	}
+</script>
+
+<title></title></head><body class="ui-mobile-viewport ui-overlay-c"><div style="min-height: 915px;" class="ui-page ui-body-c ui-page-active" tabindex="0" data-url="/temp/2012-10-03/" data-role="page"><table>
+	<tbody><tr>
+		<td>
+			<canvas id="canvas1" width="500" height="400" style="border: medium solid rgb(0, 0, 255);">
+			</canvas>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<a style="display: inline-block;" class="ui-btn ui-btn-inline ui-shadow ui-btn-corner-all ui-btn-up-c" data-theme="c" data-wrapperels="span" data-iconshadow="true" data-shadow="true" data-corners="true" href="#" data-role="button" data-inline="true" id="recordBtn"><span class="ui-btn-inner ui-btn-corner-all"><span class="ui-btn-text">Record</span></span></a>
+			<a style="display: inline-block;" class="ui-btn ui-btn-inline ui-shadow ui-btn-corner-all ui-btn-up-c" data-theme="c" data-wrapperels="span" data-iconshadow="true" data-shadow="true" data-corners="true" href="#" data-role="button" data-inline="true" id="playBtn"><span class="ui-btn-inner ui-btn-corner-all"><span class="ui-btn-text">Play</span></span></a>
+			<a style="display: none;" class="ui-btn ui-btn-inline ui-shadow ui-btn-corner-all ui-btn-up-c" data-theme="c" data-wrapperels="span" data-iconshadow="true" data-shadow="true" data-corners="true" href="#" data-role="button" data-inline="true" id="pauseBtn"><span class="ui-btn-inner ui-btn-corner-all"><span class="ui-btn-text">Pause</span></span></a>
+			<a style="display: inline-block;" class="ui-btn ui-btn-inline ui-shadow ui-btn-corner-all ui-btn-up-c" data-theme="c" data-wrapperels="span" data-iconshadow="true" data-shadow="true" data-corners="true" href="#" data-role="button" data-inline="true" id="clearBtn"><span class="ui-btn-inner ui-btn-corner-all"><span class="ui-btn-text">Clear</span></span></a>
+		</td>
+	</tr>
+</tbody></table>
+
+
+</div><div class="ui-loader ui-corner-all ui-body-a ui-loader-default"><span class="ui-icon ui-icon-loading"></span><h1>loading</h1></div></body></html>
